@@ -21,12 +21,15 @@ public class Prenotazione {
     @ManyToOne
     @JoinColumn(name = "id_evento", nullable = false)
     private Evento evento;
+
     @ManyToOne
     @JoinColumn(name = "id_utente", nullable = false)
     private Utente utente;
+
     @Column(nullable = false)
     private int numeroDiPostiPrenotati;
     @Column(nullable = false)
+
     private LocalDate dataPrenotazione;
 
     public Prenotazione(Evento evento, Utente utente, int numeroDiPostiPrenotati, LocalDate dataPrenotazione) {

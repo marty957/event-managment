@@ -77,13 +77,13 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- SECURITY -->
+		<!--&lt;!&ndash; SECURITY &ndash;&gt;
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
-		<!-- JWT JACKSON -->
+		&lt;!&ndash; JWT JACKSON &ndash;&gt;
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-jackson</artifactId>
@@ -91,7 +91,7 @@
 			<scope>runtime</scope>
 		</dependency>
 
-		<!-- JWT IMPL -->
+		&lt;!&ndash; JWT IMPL &ndash;&gt;
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-impl</artifactId>
@@ -99,12 +99,12 @@
 			<scope>runtime</scope>
 		</dependency>
 
-		<!-- JWT API -->
+		&lt;!&ndash; JWT API &ndash;&gt;
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-api</artifactId>
 			<version>0.12.6</version>
-		</dependency>
+		</dependency>-->
 
 
 

@@ -31,10 +31,7 @@ public class Utente {
     @Column(nullable = false,unique = true)
     private String email;
 
-    @ManyToMany
-    @JoinTable(name = "utente-ruolo",
-    joinColumns = @JoinColumn (name="id_utente"),
-    inverseJoinColumns = @JoinColumn(name = "id_ruolo"))
+    @OneToMany(mappedBy = "ruolo")
     private Set<Roulo> ruolo;
 
     @OneToMany(mappedBy = "organizzatore")
