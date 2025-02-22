@@ -59,13 +59,10 @@ public class UtenteService {
         utente.setUsername(utenteDTO.getUsername());
         utente.setEmail(utenteDTO.getEmail());
         utente.setPassword(utenteDTO.getPassword());
-        utente.setRuolo(utenteDTO.getRuolo());
 
         return utente;
 
     }
-
-
 
 
     public UtenteDTO entity_dto(Utente utente){

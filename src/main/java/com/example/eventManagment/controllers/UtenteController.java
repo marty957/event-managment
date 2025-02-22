@@ -45,48 +45,8 @@ public class UtenteController {
         }
     }
 
-    @PostMapping("/newOrganizer")
-    public ResponseEntity<?> nuovoOrganizzatore (@Validated @RequestBody  UtenteDTO nuovoUtente, BindingResult validazione){
-        if(validazione.hasErrors()){
 
-            StringBuilder errori= new StringBuilder("errori nella vadilazione dati \n");
-            for(ObjectError errore: validazione.getAllErrors()) {
-                errori.append(errore.getDefaultMessage()).append("\n");
-            }
-            return new ResponseEntity<>(errori,HttpStatus.BAD_REQUEST);
-        }
 
-        nuovoUtente.setRuolo(Eruolo.ORGANIZZATORE_EVENTI);
-        try {
-            String message=utenteService.insertUtente(nuovoUtente);
-            return new ResponseEntity<>(message, HttpStatus.OK);
-        } catch (UsernameDuplicateException e) {
-            return new ResponseEntity<>("Username gia presente",HttpStatus.CONFLICT);
-        } catch (EmailDuplicateException e) {
-            return new ResponseEntity<>("Email gia presente",HttpStatus.CONFLICT);
-        }
-    }
 
-    @PostMapping("/newAdmin")
-    public ResponseEntity<?> nuovoAdmin (@Validated @RequestBody  UtenteDTO nuovoUtente, BindingResult validazione){
-        if(validazione.hasErrors()){
-
-            StringBuilder errori= new StringBuilder("errori nella vadilazione dati \n");
-            for(ObjectError errore: validazione.getAllErrors()) {
-                errori.append(errore.getDefaultMessage()).append("\n");
-            }
-            return new ResponseEntity<>(errori,HttpStatus.BAD_REQUEST);
-        }
-
-        nuovoUtente.setRuolo(Eruolo.ADMIN);
-        try {
-            String message=utenteService.insertUtente(nuovoUtente);
-            return new ResponseEntity<>(message, HttpStatus.OK);
-        } catch (UsernameDuplicateException e) {
-            return new ResponseEntity<>("Username gia presente",HttpStatus.CONFLICT);
-        } catch (EmailDuplicateException e) {
-            return new ResponseEntity<>("Email gia presente",HttpStatus.CONFLICT);
-        }
-    }
 
 }
