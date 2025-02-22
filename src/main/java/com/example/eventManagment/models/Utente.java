@@ -9,11 +9,12 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 import java.util.Set;
 
-@Data
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "utenti")
+@Data
 public class Utente {
 
     @Id
@@ -30,9 +31,8 @@ public class Utente {
     private String password;
     @Column(nullable = false,unique = true)
     private String email;
-
-    @OneToMany(mappedBy = "ruolo")
-    private Set<Roulo> ruolo;
+    @Enumerated (EnumType.STRING)
+    private Eruolo ruolo;
 
     @OneToMany(mappedBy = "organizzatore")
     private List<Evento> eventiCreati;

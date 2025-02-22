@@ -22,7 +22,10 @@ public class EventoService {
         return (Evento) eventoRepository.findById(id).orElseThrow();
     }
 
-
+    public String insertEvento(Evento evento){
+        eventoRepository.save(evento);
+        return "L'evento " + evento.getNomeEvento()+ " è stato inserito correttamente";
+    }
 
 
 
