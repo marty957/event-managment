@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UtenteController {
 
 
@@ -39,7 +39,7 @@ public class UtenteController {
     JwtUtils jwtUtils;
 
 
-    @PostMapping("/newUser")
+    @PostMapping("/registrazione")
         public ResponseEntity<?> nuovoUtente (@Validated @RequestBody RegistrazioneRequest nuovoUtente, BindingResult validazione){
         if(validazione.hasErrors()){
 

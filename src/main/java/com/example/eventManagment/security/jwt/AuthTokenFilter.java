@@ -31,7 +31,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
        String headAuth= request.getHeader("Authorization");
        if(StringUtils.hasText(headAuth) && (headAuth.startsWith("Bearer "))){
 
-           return headAuth.substring(6);
+           return headAuth.substring(7);
        }
        return null;
     }
@@ -61,7 +61,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
 
-
+            filterChain.doFilter(request, response);
         }
 
     }

@@ -42,7 +42,7 @@ public class UtenteService {
         Set<Ruolo> ruoli=new HashSet<>();
         if(userDTO.getRuoli()==null|| userDTO.getRuoli().isEmpty())
         {
-            Ruolo ruoloDefault=ruoloRepository.findByNome(Eruolo.UTENTE_NORMALE).orElseThrow();
+            Ruolo ruoloDefault=ruoloRepository.findByNome(Eruolo.UTENTE).orElseThrow();
             ruoli.add(ruoloDefault);
         }else{
             for(String ruoloNome: userDTO.getRuoli()){
@@ -53,6 +53,7 @@ public class UtenteService {
             }
         }
         Utente user = dto_entity(userDTO);
+        user.setRuoli(ruoli);
         user= utenteRepository.save(user);
         return "L'utente " + user.getUsername() +" è stato inserito";
     }
@@ -72,7 +73,7 @@ public class UtenteService {
 
 
     public boolean hasRole(Utente utente, Eruolo ruoloRichiesto){
-        return utente.getRuolo().equals(ruoloRichiesto);
+        return utente.getRuoli().equals(ruoloRichiesto);
     }
 
 

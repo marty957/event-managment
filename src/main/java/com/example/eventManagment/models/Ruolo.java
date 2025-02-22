@@ -3,6 +3,8 @@ package com.example.eventManagment.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
+@Data
+@Entity
 public class Ruolo {
 
     @Id
@@ -11,5 +13,7 @@ public class Ruolo {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Eruolo ruolo;
+    private Eruolo nome;
+
+
 }

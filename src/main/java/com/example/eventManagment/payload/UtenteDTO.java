@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+import java.util.Set;
+
 
 @Data
 public class UtenteDTO {
@@ -26,6 +28,6 @@ public class UtenteDTO {
     @Email(message = "indirizzo email non valido")
     private String email;
 
-    private Eruolo ruolo;
+    private Set<String> ruoli;
 
 }

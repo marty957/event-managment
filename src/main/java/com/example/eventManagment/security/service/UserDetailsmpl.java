@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -28,11 +30,18 @@ public class UserDetailsmpl implements UserDetails {
 
 
     public static UserDetailsmpl costruisciDettagli(Utente user){
-        Collection<GrantedAuthority> ruoli= Collections.singletonList(
-                new SimpleGrantedAuthority(user.getRuolo().name()));
+        List<GrantedAuthority> ruoliUtente = user.getRuoli().stream()
+                .map(ruolo -> new SimpleGrantedAuthority(ruolo.getNome().name()))
+                .collect(Collectors.toList());
 
 
-        return new  UserDetailsmpl(user.getId_utente(),user.getUsername(),user.getEmail(), ruoli,user.getPassword());
+        return new UserDetailsmpl(
+                user.getId_utente(),
+                user.getUsername(),
+                user.getEmail(),
+                ruoliUtente,
+                user.getPassword()
+        );
 
     }
 
@@ -49,7 +58,7 @@ public class UserDetailsmpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return "";
+        return username;
     }
 
     @Override
