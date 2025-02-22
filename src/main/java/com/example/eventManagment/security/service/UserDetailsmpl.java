@@ -1,4 +1,4 @@
-package com.example.eventManagment.security.security;
+package com.example.eventManagment.security.service;
 
 
 import com.example.eventManagment.models.Utente;
@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
