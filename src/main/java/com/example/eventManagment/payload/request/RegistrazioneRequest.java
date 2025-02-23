@@ -2,28 +2,35 @@ package com.example.eventManagment.payload.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class RegistrazioneRequest {
-    @NotBlank
+
+    @NotEmpty
     @Size(min = 3, max = 15)
     private String username;
 
-    @NotBlank
+    @NotEmpty
     @Size(min = 3, max = 20)
     private String password;
 
-    @NotBlank
+    @NotEmpty
     private String cognome;
-    @NotBlank
+
     private String nome;
-    @NotBlank
+    @NotEmpty
     @Email
     private String email;
+
 
     private Set<String> ruoli;
 }

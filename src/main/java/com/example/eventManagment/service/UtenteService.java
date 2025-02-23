@@ -37,23 +37,10 @@ public class UtenteService {
     public String insertUtente(RegistrazioneRequest userDTO) throws UsernameDuplicateException, EmailDuplicateException {
 
         checkDuplicateKey(userDTO.getUsername(),userDTO.getEmail());
-
-
-        Set<Ruolo> ruoli=new HashSet<>();
-        if(userDTO.getRuoli()==null|| userDTO.getRuoli().isEmpty())
-        {
-            Ruolo ruoloDefault=ruoloRepository.findByNome(Eruolo.UTENTE).orElseThrow();
-            ruoli.add(ruoloDefault);
-        }else{
-            for(String ruoloNome: userDTO.getRuoli()){
-                Eruolo eruolo=Eruolo.valueOf(ruoloNome.toUpperCase());
-
-                Ruolo ruolo = ruoloRepository.findByNome(eruolo).orElseThrow();
-                ruoli.add(ruolo);
-            }
-        }
-        Utente user = dto_entity(userDTO);
-        user.setRuoli(ruoli);
+        Utente user=dto_entity(userDTO);
+        Ruolo ruolo=ruoloRepository.findByNome(Eruolo.UTENTE)
+                .orElseThrow(()-> new RuntimeException("ruolo non trovatp"));
+        user.setRuoli(new HashSet<>(Set.of(ruolo)));
         user= utenteRepository.save(user);
         return "L'utente " + user.getUsername() +" è stato inserito";
     }

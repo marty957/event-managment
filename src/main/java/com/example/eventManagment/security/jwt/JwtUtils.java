@@ -19,22 +19,37 @@ import java.util.Date;
 @Component
 public class JwtUtils {
 
-@Value("${jwt.Secret}")
+@Value("${jwtSecret}")
 private String jwtSecret;
 
-@Value("${jwt.Expirations}")
-private int jwtExpiration;
+@Value("${jwtExpirations}")
+private int jwtExpirations;
 
     // creo il jwt
 
 public String cretJwtToken(Authentication authentication){
-   UserDetailsmpl utentePrincipal= (UserDetailsmpl) authentication.getPrincipal();
-     return Jwts.builder()
-            .setSubject(utentePrincipal.getUsername())
-            .setIssuedAt(new Date())
-            .setExpiration(new Date(new Date().getTime()+jwtExpiration))
-            .signWith(getKey(), SignatureAlgorithm.ES256)
-            .compact();
+    if (authentication == null || !authentication.isAuthenticated()) {
+        throw new IllegalArgumentException("L'autenticazione non è valida");
+    }
+    Object principal = authentication.getPrincipal();
+    if (principal instanceof UserDetailsmpl utentePrincipal) { // Uso di pattern matching per il tipo
+        String username = utentePrincipal.getUsername();
+
+        // Controllo che l'username sia non nullo e non vuoto
+        if (username == null || username.isEmpty()) {
+            throw new IllegalArgumentException("L'username non può essere nullo o vuoto");
+        }
+
+        // Creazione del token JWT
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(new Date().getTime() + jwtExpirations))
+                .signWith(getKey(), SignatureAlgorithm.HS256)
+                .compact();
+    } else {
+        throw new IllegalArgumentException("Il principale non è di tipo UserDetailsmpl");
+    }
 
 
 }

@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/user")
 public class UtenteController {
 
 
@@ -47,7 +47,7 @@ public class UtenteController {
             for(ObjectError errore: validazione.getAllErrors()) {
                 errori.append(errore.getDefaultMessage()).append("\n");
             }
-            return new ResponseEntity<>(errori,HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errori.toString(),HttpStatus.BAD_REQUEST);
         }
 
 
@@ -55,9 +55,9 @@ public class UtenteController {
             String message=utenteService.insertUtente(nuovoUtente);
             return new ResponseEntity<>(message, HttpStatus.OK);
         } catch (UsernameDuplicateException e) {
-           return new ResponseEntity<>("Username gia presente",HttpStatus.CONFLICT);
+           return new ResponseEntity<>("Username gia presente",HttpStatus.BAD_REQUEST);
         } catch (EmailDuplicateException e) {
-            return new ResponseEntity<>("Email gia presente",HttpStatus.CONFLICT);
+            return new ResponseEntity<>("Email gia presente",HttpStatus.BAD_REQUEST);
         }
     }
 
