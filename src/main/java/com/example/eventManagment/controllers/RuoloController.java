@@ -10,27 +10,29 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 @RestController
 @RequestMapping("/ruoli")
 public class RuoloController {
 
     @Autowired
-    private RuoloRepository ruoloRepository; // Oppure RuoloService
+    private RuoloRepository ruoloRepository;
 
     @PostMapping("/nuovo")
     public ResponseEntity<?> nuovoRuolo(@RequestBody RuoloRequest ruoloRequest) {
         try {
-            // Verifica se il ruolo esiste già
-            if (ruoloRepository.findByNome(Eruolo.valueOf(ruoloRequest.getNome())).isPresent()) {
+            Eruolo ruoloEnum = Eruolo.valueOf(ruoloRequest.getNome().toUpperCase()); // Converti in maiuscolo
+
+            if (ruoloRepository.findByNome(ruoloEnum).isPresent()) {
                 return ResponseEntity.badRequest().body("Ruolo già esistente.");
             }
 
             Ruolo ruolo = new Ruolo();
-            ruolo.setNome(Eruolo.valueOf(ruoloRequest.getNome()));
-            ruoloRepository.save(ruolo); // Oppure ruoloService.creaRuolo(ruolo);
+            ruolo.setNome(ruoloEnum);
+            ruoloRepository.save(ruolo);
 
             return ResponseEntity.ok("Ruolo creato con successo.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Ruolo non valido. I ruoli validi sono: " + java.util.Arrays.asList(Eruolo.values()));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Errore durante la creazione del ruolo.");
         }
