@@ -23,7 +23,9 @@ import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -49,11 +51,13 @@ public class UtenteController {
             }
             return new ResponseEntity<>(errori.toString(),HttpStatus.BAD_REQUEST);
         }
-
+        Map<String, String> response = new HashMap<>();
 
         try {
-            String message=utenteService.insertUtente(nuovoUtente);
-            return new ResponseEntity<>(message, HttpStatus.OK);
+            String message = utenteService.insertUtente(nuovoUtente);
+            response.put("message", message);
+
+            return ResponseEntity.ok(response);
         } catch (UsernameDuplicateException e) {
            return new ResponseEntity<>("Username gia presente",HttpStatus.BAD_REQUEST);
         } catch (EmailDuplicateException e) {

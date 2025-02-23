@@ -59,26 +59,16 @@ public class UtenteService {
     }
 
 
-    public boolean hasRole(Utente utente, Eruolo ruoloRichiesto){
-        return utente.getRuoli().equals(ruoloRichiesto);
+    public boolean hasRole(Utente utente, Eruolo ruoloRichiesto) {
+        return utente.getRuoli().stream()
+                .anyMatch(ruolo -> ruolo.getNome() == ruoloRichiesto);
+
     }
 
 
 
     // travasi
 
-/*    public Utente dto_entity(UtenteDTO utenteDTO) {
-
-        Utente utente = new Utente();
-        utente.setCognome(utenteDTO.getCognome());
-        utente.setNome(utenteDTO.getNome());
-        utente.setUsername(utenteDTO.getUsername());
-        utente.setEmail(utenteDTO.getEmail());
-        utente.setPassword(utenteDTO.getPassword());
-
-        return utente;
-
-    }*/
 
 
     public UtenteDTO entity_dto(Utente utente){
