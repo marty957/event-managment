@@ -84,12 +84,11 @@ public class UtenteController {
         }
         UsernamePasswordAuthenticationToken tokenAuth= new UsernamePasswordAuthenticationToken(loginDTO.getUsername(),loginDTO.getPassword());
 
-
         Authentication authentication= authenticationManager.authenticate(tokenAuth);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String finalToken=jwtUtils.cretJwtToken(authentication);
+        String finalToken=jwtUtils.creaJwtToken(authentication);
 
         UserDetailsmpl detailUser= (UserDetailsmpl) authentication.getPrincipal();
 
@@ -103,7 +102,7 @@ public class UtenteController {
         return new ResponseEntity<>(jwtResponse,HttpStatus.OK);
     }
     @PostMapping("/newEvento")
-    /*@PreAuthorize("hasAuthority('ORGANIZZATORE')")*/
+    @PreAuthorize("hasAuthority('ORGANIZZATORE')")
     public ResponseEntity<?> nuovoEvento(@Validated @RequestBody EventoDTO eventoDTO, BindingResult validazione, Authentication authentication) {
         if(validazione.hasErrors()){
 
@@ -114,6 +113,13 @@ public class UtenteController {
             return new ResponseEntity<>(errori.toString(),HttpStatus.BAD_REQUEST);
         }
         try {
+            Evento evento = eventoService.insertEvento(eventoDTO);
+            return new ResponseEntity<>(evento, HttpStatus.CREATED);
+        }
+        catch (Exception e ){
+            throw new RuntimeException("dati non validi");
+        }
+    /*    try {
             Utente organizzatore = (Utente) authentication.getPrincipal();
             if (organizzatore == null) {
                 return new ResponseEntity<>("Organizzatore non trovato", HttpStatus.UNAUTHORIZED);
@@ -125,6 +131,9 @@ public class UtenteController {
         } catch (Exception e) {
             return new ResponseEntity<>("Errore durante la creazione dell'evento: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }*/
+
+
     }}
 
 

@@ -7,6 +7,7 @@ import com.example.eventManagment.repository.EventoRepository;
 import com.example.eventManagment.repository.UtenteRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -28,8 +29,18 @@ public class EventoService {
     public Evento insertEvento(EventoDTO evento){
 
         Evento event= dto_entity(evento);
-        Evento eventoNuovo=eventoRepository.save(event);
-       return  eventoNuovo;
+        try {
+            // Salvataggio dell'evento
+            Evento eventoNuovo=eventoRepository.save(event);
+
+            return eventoNuovo;
+
+        } catch (Exception e) {
+            // Gestione di eccezioni generiche
+            throw new RuntimeException("Errore imprevisto durante il salvataggio dell'evento.");
+        }
+
+
     }
 
 

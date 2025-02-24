@@ -27,36 +27,27 @@ private int jwtExpirations;
 
     // creo il jwt
 
-public String cretJwtToken(Authentication authentication){
+    public String creaJwtToken(Authentication authentication) {
+        UserDetailsmpl userDetails = (UserDetailsmpl) authentication.getPrincipal();
 
-   Object principal = (UserDetailsmpl) authentication.getPrincipal();
-    if (principal instanceof UserDetailsmpl utentePrincipal) { // Uso di pattern matching per il tipo
-        String username = utentePrincipal.getUsername();
-
-        // Controllo che l'username sia non nullo e non vuoto
-        if (username == null || username.isEmpty()) {
-            throw new IllegalArgumentException("L'username non può essere nullo o vuoto");
-        }
-
-        // Creazione del token JWT
+        //Ora costruiamo il jwt
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(new Date().getTime() + jwtExpirations))
-                .signWith(getKey(), SignatureAlgorithm.HS256)
-                .compact();
-    } else {
-        throw new IllegalArgumentException("Il principale non è di tipo UserDetailsmpl");
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirations))
+                .signWith(getKey(), SignatureAlgorithm.HS256)   //Firma token con chiave segreta.
+                .compact();   //converte in stringa
     }
-
-
-}
 
 
     //recupero l'username dal jwt
     public String getUsernameFromToken(String token) {
-       String username= Jwts.parser().setSigningKey(getKey()).build().parseClaimsJwt(token).getBody().getSubject();
-       return username;
+        return Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .build()
+                .parseClaimsJws(token) // ✅ Usa parseClaimsJws() per token firmati!
+                .getBody()
+                .getSubject();
     }
 
     // recupero scadenza token

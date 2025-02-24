@@ -27,49 +27,76 @@ import java.security.SignatureException;
 @Component
 public class AuthTokenFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private JwtUtils utils;
 
     @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    JwtUtils jwtUtils;
 
+    @Autowired
+    UserDetailsServiceImpl userDetailsService;
+
+    //Validiamo il token che ci arriva dall'header HTTP da input ServletRequest
+    //Output sarà una stringa Jwt senza Bearer qual'ora ci fosse.
+    private String analizzaJwt( HttpServletRequest request){
+        String headAuthenticazione = request.getHeader("Authorization");
+
+        // 1. Controllo sulla presenza di testo nel valore di Authorization
+        // 2. Controllo se il valore recuperato inizia con "Bearer "
+        // es. Bearer 21nsn3834d93jjz03923nflse923
+        if ((StringUtils.hasText(headAuthenticazione) && (headAuthenticazione.startsWith("Bearer ")))) {
+            return headAuthenticazione.substring(7);
+            //stiamo chiedendo di recuperarmi la stringa dopo il settimo
+            // carattere ovvero a partire da dopo lo spazio dopo Bearer.
+        }
+        return null;
+    }
+
+    //qui facciamo la verifica sulla nostra stringa (sottostringa) e ci facciamo i controlli sopra.
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        //salvo la stringa del token
+       /* String token = analizzaJwt(request);
 
-        try {
-            String jwt = analizeJwt(request);
-
-            if (jwt != null && utils.valdiazioneJwtToken(jwt)) {
-                String username = utils.getUsernameFromToken(jwt);
+        //se la richiesta presenta un JWT, la convalidiamo
+        if (token != null && jwtUtils.valdiazioneJwtToken(token)){
+            //recupero lo username con il metodo fatto nella calsse JwtUtils.
+            String username = jwtUtils.getUsernameFromToken(token);
+            if (SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities()
+                );
+                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
-        } catch (ExpiredJwtException e) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token JWT scaduto");
-            return;
-        } catch (MalformedJwtException | UnsupportedJwtException | IllegalArgumentException e) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token JWT non valido");
-            return;
-        } catch (Exception e) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Errore nell'elaborazione del token JWT");
-            return;
+        }
+        // **IMPORTANTE**: permette alla richiesta di passare attraverso il filtro successivo
+        filterChain.doFilter(request, response);*/
+        String token = analizzaJwt(request);
+        if (token != null) {
+            System.out.println("Token ricevuto: " + token); // LOG IMPORTANTE
+
+            if (jwtUtils.valdiazioneJwtToken(token)) {
+                String username = jwtUtils.getUsernameFromToken(token);
+                System.out.println("Utente autenticato: " + username); // LOG IMPORTANTE
+
+                if (SecurityContextHolder.getContext().getAuthentication() == null) {
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                    UsernamePasswordAuthenticationToken authenticationToken =
+                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                }
+            } else {
+                System.out.println("Token non valido");
+            }
+        } else {
+            System.out.println("Nessun token trovato nella richiesta");
         }
 
         filterChain.doFilter(request, response);
-    }
-
-    private String analizeJwt(HttpServletRequest request) {
-        String headerAuth = request.getHeader("Authorization");
-        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
-            return headerAuth.substring(7);
-        }
-        return null;
 
     }
 }

@@ -24,7 +24,7 @@ public class EventoDTO {
     private String nomeEvento;
 
     private String descrizione;
-    @NotEmpty
+    @NotNull
     private Long organizzatoreId;
 
     private LocalDate dataEvento;
