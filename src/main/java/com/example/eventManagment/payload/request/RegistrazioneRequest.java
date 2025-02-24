@@ -1,5 +1,6 @@
 package com.example.eventManagment.payload.request;
 
+import com.example.eventManagment.models.Ruolo;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -32,5 +33,5 @@ public class RegistrazioneRequest {
     private String email;
 
 
-    private Set<String> ruoli;
+    private Ruolo ruolo;
 }

@@ -41,7 +41,6 @@ public class PrenotazioneService {
 
     public PrenotazioneDTO dto_entinty(Prenotazione prenotazione){
         PrenotazioneDTO prenotazioneDTO=new PrenotazioneDTO();
-
         prenotazioneDTO.setIdEvento(prenotazioneDTO.getIdEvento());
         prenotazioneDTO.setNumeroDiPostiPrenotati(prenotazione.getNumeroDiPostiPrenotati());
         return prenotazioneDTO;

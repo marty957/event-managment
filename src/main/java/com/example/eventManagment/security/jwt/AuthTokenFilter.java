@@ -33,14 +33,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
-    private String analizeJwt(HttpServletRequest request) {
-        String headAuth = request.getHeader("Authorization");
-        if (StringUtils.hasText(headAuth) && headAuth.startsWith("Bearer ")) {
-            return headAuth.substring(7);
-        }
-        return null;
-    }
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -48,7 +40,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         try {
             String jwt = analizeJwt(request);
 
-            if (jwt != null && utils.valdiazioneJwtToken(jwt)) {  // <- Corretto errore di battitura
+            if (jwt != null && utils.valdiazioneJwtToken(jwt)) {
                 String username = utils.getUsernameFromToken(jwt);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
@@ -70,5 +62,14 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private String analizeJwt(HttpServletRequest request) {
+        String headerAuth = request.getHeader("Authorization");
+        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
+            return headerAuth.substring(7);
+        }
+        return null;
+
     }
 }

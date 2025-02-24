@@ -38,7 +38,7 @@ public class UtenteService {
 
         checkDuplicateKey(userDTO.getUsername(),userDTO.getEmail());
         Utente user=dto_entity(userDTO);
-        Ruolo ruolo=ruoloRepository.findByNome(Eruolo.UTENTE)
+        Ruolo ruolo=ruoloRepository.findByNome(userDTO.getRuolo().getNome())
                 .orElseThrow(()-> new RuntimeException("ruolo non trovatp"));
         user.setRuoli(new HashSet<>(Set.of(ruolo)));
         user= utenteRepository.save(user);

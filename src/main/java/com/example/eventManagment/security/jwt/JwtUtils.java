@@ -28,10 +28,8 @@ private int jwtExpirations;
     // creo il jwt
 
 public String cretJwtToken(Authentication authentication){
-    if (authentication == null || !authentication.isAuthenticated()) {
-        throw new IllegalArgumentException("L'autenticazione non è valida");
-    }
-    Object principal = authentication.getPrincipal();
+
+   Object principal = (UserDetailsmpl) authentication.getPrincipal();
     if (principal instanceof UserDetailsmpl utentePrincipal) { // Uso di pattern matching per il tipo
         String username = utentePrincipal.getUsername();
 
@@ -54,6 +52,7 @@ public String cretJwtToken(Authentication authentication){
 
 }
 
+
     //recupero l'username dal jwt
     public String getUsernameFromToken(String token) {
        String username= Jwts.parser().setSigningKey(getKey()).build().parseClaimsJwt(token).getBody().getSubject();
@@ -69,8 +68,12 @@ public String cretJwtToken(Authentication authentication){
 
     //validazione del Token
     public boolean valdiazioneJwtToken(String token){
-        Jwts.parser().setSigningKey(getKey()).build().parse(token);
-        return true;
+        try {
+            Jwts.parser().setSigningKey(getKey()).build().parse(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
 }
 
     //recupero chiave

@@ -58,7 +58,11 @@ public class WebSecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/user/registrazione", "/user/login").permitAll()
+                        .requestMatchers("/user/registrazione").permitAll()
+                        .requestMatchers("/user/login").permitAll()
+                        .requestMatchers("/user/newEvento").hasAuthority("ORGANIZZATORE")
+                        .requestMatchers("/prenotazione").hasAnyAuthority("UTENTE")
+
                 .anyRequest().authenticated());
 
                 http.authenticationProvider(authenticationProvider());
