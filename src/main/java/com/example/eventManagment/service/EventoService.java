@@ -5,11 +5,13 @@ import com.example.eventManagment.models.Evento;
 import com.example.eventManagment.payload.EventoDTO;
 import com.example.eventManagment.repository.EventoRepository;
 import com.example.eventManagment.repository.UtenteRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.util.Optional;
 
 @Service
@@ -43,19 +45,34 @@ public class EventoService {
 
     }
 
+    public String deleteEvento(Long id){
 
-    public String editEvento(EventoDTO eventoDTO){
-        Evento event= dto_entity(eventoDTO);
-        eventoRepository.save(event);
-        return "L'Evento "+ event.getNomeEvento()+ " è stato modificato";
-
+     Evento evento= eventoRepository.findById(id).orElseThrow();
+     eventoRepository.delete(evento);
+     return "evento eliminito correttamente";
     }
 
-    public String deleteEvento(long id){
 
-        eventoRepository.delete(getById(id));
-        return "Evento eliminato";
+    public void deleteEvento(long id, String username) {
+        Optional<Evento> optionalEvento = eventoRepository.findById(id);
+
+        if (optionalEvento.isEmpty()) {
+            throw new EntityNotFoundException("Evento non trovato.");
+        }
+
+        Evento evento = optionalEvento.get();
+
+        if (!evento.getOrganizzatore().getUsername().equals(username)) {
+            try {
+                throw new AccessDeniedException("Non sei autorizzato ad eliminare questo evento.");
+            } catch (AccessDeniedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        eventoRepository.deleteById(id);
     }
+
 
     //travaso
 
